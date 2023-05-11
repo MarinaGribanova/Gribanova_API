@@ -12,6 +12,20 @@ namespace Gribanova_API.Models
         public int TrainerwWorkExperience { get; set; }
 
         public string TrainerEmail { get; set; }
-        public ICollection<Training> TrainerTraining { get; set; }
+        public ICollection<Training> TrainerTrainings { get; set; }
+
+        public Trainer()
+        {
+            TrainerTrainings = new List<Training>();
+        }
+        public void AddTraining(Training training)
+        {
+            TrainerTrainings.Add(training);
+        }
+
+        public void DeleteTraining(Training training)
+        {
+            TrainerTrainings.Remove(training);
+        }
     }
 }
