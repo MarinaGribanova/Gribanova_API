@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gribanova_API.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Gribanova_API.Controllers
 {
@@ -49,6 +50,42 @@ namespace Gribanova_API.Controllers
             return training;
         }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<IEnumerable<Training>>> GetTrainingByName(string name)
+        {
+            if (_context.Training == null)
+            {
+                return NotFound();
+            }
+            var training = await _context.Training.Where(t => t.TrainingName.Contains(name)).ToListAsync();
+           
+
+            if (training == null)
+            {
+                return NotFound();
+            }
+
+            return training;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Training>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
+        {
+            if (_context.Training == null)
+            {
+                return NotFound();
+            }
+            var startDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart);
+            var endDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart + 1);//+1
+            var training = await _context.Training.Where(t => (t.TrainingDate <= endDate && t.TrainingDate >= startDate)).ToListAsync();
+
+            if (training == null)
+            {
+                return NotFound();
+            }
+
+            return training;
+        }
         // PUT: api/Trainings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -89,6 +126,8 @@ namespace Gribanova_API.Controllers
           {
               return Problem("Entity set 'TrainingDataContext.Training'  is null.");
           }
+            var trainer = await _context.Trainer.FindAsync(training.TrainerId);
+            trainer.AddTraining(training);
             _context.Training.Add(training);
             await _context.SaveChangesAsync();
 
@@ -108,6 +147,9 @@ namespace Gribanova_API.Controllers
             {
                 return NotFound();
             }
+
+            var trainer = await _context.Trainer.FindAsync(training.TrainerId);
+            trainer.DeleteTraining(training);
 
             _context.Training.Remove(training);
             await _context.SaveChangesAsync();

@@ -28,7 +28,7 @@ namespace Gribanova_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Trainer.ToListAsync();
+            return await _context.Trainer.Include(t => t.TrainerTrainings).ToListAsync();
         }
 
         // GET: api/Trainers/5
@@ -41,6 +41,23 @@ namespace Gribanova_API.Controllers
           }
             var trainer = await _context.Trainer.FindAsync(id);
 
+            if (trainer == null)
+            {
+                return NotFound();
+            }
+
+            return trainer;
+        }
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<IEnumerable<Trainer>>> GetTrainerBySpec(string name)
+        {
+            if (_context.Trainer == null)
+            {
+                return NotFound();
+            }
+      
+            var trainer = await _context.Trainer.Where(t => t.TrainerSpecialization.Contains(name)).Include(t => t.TrainerTrainings).ToListAsync();
             if (trainer == null)
             {
                 return NotFound();
