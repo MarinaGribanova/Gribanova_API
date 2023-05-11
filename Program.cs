@@ -1,6 +1,7 @@
 using Gribanova_API.Models;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Gribanova_API.Controllers;
 namespace Gribanova_API
 {
     public class Program
