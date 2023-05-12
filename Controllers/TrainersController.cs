@@ -23,7 +23,7 @@ namespace Gribanova_API.Controllers
 
         // GET: api/Trainers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Trainer>>> GetTrainer()
+        public async Task<ActionResult<IEnumerable<Trainer>>> GetAllTrainers()
         {
           if (_context.Trainer == null)
           {
@@ -34,7 +34,7 @@ namespace Gribanova_API.Controllers
 
         // GET: api/Trainers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Trainer>> GetTrainer(int id)
+        public async Task<ActionResult<Trainer>> GetTrainerById(int id)
         {
           if (_context.Trainer == null)
           {
@@ -97,6 +97,8 @@ namespace Gribanova_API.Controllers
 
             return NoContent();
         }
+
+
 
         // POST: api/Trainers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

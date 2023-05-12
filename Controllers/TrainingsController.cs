@@ -23,7 +23,7 @@ namespace Gribanova_API.Controllers
 
         // GET: api/Trainings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Training>>> GetTraining()
+        public async Task<ActionResult<IEnumerable<Training>>> GetAllTrainings()
         {
           if (_context.Training == null)
           {
@@ -34,7 +34,7 @@ namespace Gribanova_API.Controllers
 
         // GET: api/Trainings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Training>> GetTraining(int id)
+        public async Task<ActionResult<Training>> GetTrainingById(int id)
         {
           if (_context.Training == null)
           {
@@ -97,6 +97,67 @@ namespace Gribanova_API.Controllers
             }
 
             _context.Entry(training).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TrainingExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id},{time}")]
+        public async Task<IActionResult> IncreaseTrainingDuration(int id, int time)
+        {
+            var training = await _context.Training.FindAsync(id);
+
+            if (id != training.TrainingId)
+            {
+                return BadRequest();
+            }
+
+            training.IncreaseTrainingDuration(time);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TrainingExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ChangeTrainingDate(int id, [FromQuery] DateDTO dateInterval)
+        {
+            var newDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart, dateInterval.hourStart, dateInterval.minuteStart, 0);
+            var training = await _context.Training.FindAsync(id);
+            if (id != training.TrainingId)
+            {
+                return BadRequest();
+            }
+
+            training.ChangeTrainingDate(newDate);
 
             try
             {
