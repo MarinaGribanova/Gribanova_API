@@ -69,7 +69,7 @@ namespace Gribanova_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
+        public async Task<ActionResult<IEnumerable<Training>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
         {
             if (_context.Training == null)
             {
@@ -77,7 +77,7 @@ namespace Gribanova_API.Controllers
             }
             var startDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart);
             var endDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart + 1);//+1
-            var training = await _context.Training.Where(t => (t.TrainingDate <= endDate && t.TrainingDate >= startDate)).Select(t=> t.TrainingName).ToListAsync();
+            var training = await _context.Training.Where(t => (t.TrainingDate <= endDate && t.TrainingDate >= startDate)).ToListAsync();
 
             if (training == null)
             {
@@ -86,6 +86,8 @@ namespace Gribanova_API.Controllers
 
             return training;
         }
+
+
         // PUT: api/Trainings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

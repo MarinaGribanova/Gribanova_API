@@ -67,6 +67,36 @@ namespace Gribanova_API.Controllers
             return trainer;
         }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<IEnumerable<Object>>> GetTrainingAndTrainersByName(string name)
+        {
+            if (_context.Trainer == null)
+            {
+                return NotFound();
+            }
+
+            var trainersWithTraining = await _context.Trainer
+                .Include(t => t.TrainerTrainings)
+                .Where(t => t.TrainerTrainings.Any(tt => tt.TrainingName.Contains(name)))
+                .Select(t => new
+                {
+                    trainerFirstName = t.TrainerFirstName,
+                    trainerLastName = t.TrainerLastName,
+                    training = t.TrainerTrainings.Where(tt => tt.TrainingName.Contains(name))
+                        .Select(tt => new { tt.TrainingName, tt.TrainingDate })
+                        .ToList()
+                })
+                .ToListAsync();
+
+            if (trainersWithTraining == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(trainersWithTraining);
+        }
+
+
         // PUT: api/Trainers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
