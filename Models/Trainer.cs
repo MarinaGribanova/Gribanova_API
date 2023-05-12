@@ -2,6 +2,7 @@
 using Gribanova_API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Gribanova_API.Models
 {
@@ -29,6 +30,18 @@ namespace Gribanova_API.Models
         public void DeleteTraining(Training training)
         {
             TrainerTrainings.Remove(training);
+        }
+
+        public static explicit operator Trainer(TrainerDTO trainerdto)
+        {
+            Trainer trainer = new Trainer();
+            trainer.TrainerId = trainerdto.TrainerId;
+            trainer.TrainerFirstName = trainerdto.TrainerFirstName;
+            trainer.TrainerLastName = trainerdto.TrainerLastName;
+            trainer.TrainerSpecialization = trainerdto.TrainerSpecialization;
+            trainer.TrainerwWorkExperience = trainerdto.TrainerwWorkExperience;
+            trainer.TrainerEmail = trainerdto.TrainerEmail;
+            return trainer;
         }
     }
 }

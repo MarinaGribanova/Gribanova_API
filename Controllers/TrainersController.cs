@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gribanova_API.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Gribanova_API.Controllers
 {
@@ -100,12 +101,13 @@ namespace Gribanova_API.Controllers
         // POST: api/Trainers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Trainer>> PostTrainer(Trainer trainer)
+        public async Task<ActionResult<Trainer>> PostTrainer(TrainerDTO trainerdto)
         {
           if (_context.Trainer == null)
           {
               return Problem("Entity set 'TrainingDataContext.Trainer'  is null.");
           }
+            Trainer trainer = (Trainer)trainerdto;
             _context.Trainer.Add(trainer);
             await _context.SaveChangesAsync();
 
