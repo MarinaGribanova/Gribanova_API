@@ -2,6 +2,9 @@ using Gribanova_API.Models;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Gribanova_API.Controllers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 namespace Gribanova_API
 {
     public class Program
@@ -17,7 +20,23 @@ namespace Gribanova_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthOptions.Issuer,
 
+                    ValidateAudience = true,
+                    ValidAudience = AuthOptions.Audience,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = AuthOptions.SigningKey,
+
+                    ValidateLifetime = true,
+                };
+            }
+              );
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

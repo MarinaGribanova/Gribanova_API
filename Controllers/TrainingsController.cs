@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gribanova_API.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Gribanova_API.Controllers
 {
@@ -34,6 +36,7 @@ namespace Gribanova_API.Controllers
 
         // GET: api/Trainings/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Training>> GetTrainingById(int id)
         {
           if (_context.Training == null)
@@ -120,6 +123,7 @@ namespace Gribanova_API.Controllers
         }
 
         [HttpPut("{id},{time}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> IncreaseTrainingDuration(int id, int time)
         {
             var training = await _context.Training.FindAsync(id);

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gribanova_API.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Gribanova_API.Controllers
 {
@@ -63,11 +65,11 @@ namespace Gribanova_API.Controllers
             {
                 return NotFound();
             }
-
             return trainer;
         }
 
         [HttpGet("{name}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<IEnumerable<Object>>> GetTrainingAndTrainersByName(string name)
         {
             if (_context.Trainer == null)
