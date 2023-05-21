@@ -72,15 +72,33 @@ namespace Gribanova_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Training>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
+        public async Task<ActionResult<IEnumerable<object>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
         {
-            if (_context.Training == null)
-            {
-                return NotFound();
-            }
             var startDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart);
-            var endDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart + 1);//+1
-            var training = await _context.Training.Where(t => (t.TrainingDate <= endDate && t.TrainingDate >= startDate)).ToListAsync();
+            var endDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart + 1);
+
+            var training = await _context.Training
+                .Where(t => t.TrainingDate >= startDate && t.TrainingDate < endDate)
+                .Include(t => t.Trainer)
+                .Select(t => new
+                {
+                    t.TrainingId,
+                    t.TrainingName,
+                    t.TrainingDate,
+                    t.TrainingDescription,
+                    t.TrainingDuration,
+                    t.TrainingRoom,
+                    Trainer = new
+                    {
+                        t.Trainer.TrainerId,
+                        t.Trainer.TrainerFirstName,
+                        t.Trainer.TrainerLastName,
+                        t.Trainer.TrainerSpecialization,
+                        t.Trainer.TrainerwWorkExperience,
+                        t.Trainer.TrainerEmail
+                    }
+                })
+                .ToListAsync();
 
             if (training == null)
             {
@@ -133,7 +151,7 @@ namespace Gribanova_API.Controllers
                 return BadRequest();
             }
 
-            training.IncreaseTrainingDuration(time);
+            training.ChangeTrainingDuration(time);
 
             try
             {

@@ -1,4 +1,7 @@
-﻿namespace Gribanova_API.Models
+﻿using Gribanova_API.Models;
+using System.Drawing.Printing;
+
+namespace Gribanova_API.Models
 {
     public class Training
     {
@@ -8,11 +11,14 @@
         public string TrainingDescription { get; set; }
         public int TrainingDuration { get; set; }
         public int TrainingRoom { get; set; }
+
+        public Trainer Trainer { get; set; }
         public int TrainerId { get; set; }
 
-        public void IncreaseTrainingDuration(int minutes)
+
+        public void ChangeTrainingDuration(int minutes)
         {
-            TrainingDuration += minutes;
+            TrainingDuration = minutes;
 
         }
         public void ChangeTrainingDate(DateTime newDate)
