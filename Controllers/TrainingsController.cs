@@ -73,7 +73,7 @@ namespace Gribanova_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TrainingInfoDTO>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
+        public async Task<ActionResult<IEnumerable<TrainingInfoDTO>>> GetTrainingByDate([FromQuery] DateDTOForSerach dateInterval)
         {
             var startDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart);
             var endDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart + 1);

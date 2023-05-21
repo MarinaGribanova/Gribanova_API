@@ -18,4 +18,12 @@
         public string TrainerLastName { get; set; }
 
     }
+
+        public class DateDTOForSerach
+        {
+            public int yearStart { get; set; }
+            public int monthStart { get; set; }
+            public int dayStart { get; set; }
+        }
+
 }
