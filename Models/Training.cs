@@ -11,7 +11,6 @@ namespace Gribanova_API.Models
         public string TrainingDescription { get; set; }
         public int TrainingDuration { get; set; }
         public int TrainingRoom { get; set; }
-
         public Trainer Trainer { get; set; }
         public int TrainerId { get; set; }
 

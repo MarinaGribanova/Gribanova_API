@@ -9,6 +9,7 @@ using Gribanova_API.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using static Gribanova_API.Models.ClassesDTO;
 
 namespace Gribanova_API.Controllers
 {
@@ -72,7 +73,7 @@ namespace Gribanova_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
+        public async Task<ActionResult<IEnumerable<TrainingInfoDTO>>> GetTrainingByDate([FromQuery] DateDTO dateInterval)
         {
             var startDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart);
             var endDate = new DateTime(dateInterval.yearStart, dateInterval.monthStart, dateInterval.dayStart + 1);
@@ -80,22 +81,16 @@ namespace Gribanova_API.Controllers
             var training = await _context.Training
                 .Where(t => t.TrainingDate >= startDate && t.TrainingDate < endDate)
                 .Include(t => t.Trainer)
-                .Select(t => new
+                .Select(t => new TrainingInfoDTO
                 {
-                    t.TrainingId,
-                    t.TrainingName,
-                    t.TrainingDate,
-                    t.TrainingDescription,
-                    t.TrainingDuration,
-                    t.TrainingRoom,
-                    Trainer = new
+                    TrainingName = t.TrainingName,
+                    TrainingDate = t.TrainingDate,
+                    TrainingDuration = t.TrainingDuration,
+                    TrainingRoom = t.TrainingRoom,
+                    Trainer = new TrainerInfoDTO
                     {
-                        t.Trainer.TrainerId,
-                        t.Trainer.TrainerFirstName,
-                        t.Trainer.TrainerLastName,
-                        t.Trainer.TrainerSpecialization,
-                        t.Trainer.TrainerwWorkExperience,
-                        t.Trainer.TrainerEmail
+                        TrainerFirstName = t.Trainer.TrainerFirstName,
+                        TrainerLastName = t.Trainer.TrainerLastName
                     }
                 })
                 .ToListAsync();
