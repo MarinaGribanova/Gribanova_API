@@ -10,7 +10,7 @@ namespace Gribanova_API.Models
             public TrainingDataContext(DbContextOptions<TrainingDataContext> options)
                 : base(options)
             {
-                Database.EnsureCreated();
+                Database.Migrate();
             }
 
             public DbSet<Gribanova_API.Models.Trainer> Trainer { get; set; } = default!;

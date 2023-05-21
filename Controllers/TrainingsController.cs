@@ -87,6 +87,7 @@ namespace Gribanova_API.Controllers
                     TrainingDate = t.TrainingDate,
                     TrainingDuration = t.TrainingDuration,
                     TrainingRoom = t.TrainingRoom,
+                    Price= t.Price,
                     Trainer = new TrainerInfoDTO
                     {
                         TrainerFirstName = t.Trainer.TrainerFirstName,

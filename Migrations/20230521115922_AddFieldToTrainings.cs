@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Gribanova_API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddFieldToTrainings : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace Gribanova_API.Migrations
                     TrainingDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TrainingDuration = table.Column<int>(type: "int", nullable: false),
                     TrainingRoom = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     TrainerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

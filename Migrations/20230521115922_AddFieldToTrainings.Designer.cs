@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gribanova_API.Migrations
 {
     [DbContext(typeof(TrainingDataContext))]
-    [Migration("20230511151740_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230521115922_AddFieldToTrainings")]
+    partial class AddFieldToTrainings
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,9 @@ namespace Gribanova_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainingId"));
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
@@ -94,11 +97,13 @@ namespace Gribanova_API.Migrations
 
             modelBuilder.Entity("Gribanova_API.Models.Training", b =>
                 {
-                    b.HasOne("Gribanova_API.Models.Trainer", null)
+                    b.HasOne("Gribanova_API.Models.Trainer", "Trainer")
                         .WithMany("TrainerTrainings")
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Gribanova_API.Models.Trainer", b =>

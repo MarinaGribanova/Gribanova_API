@@ -8,6 +8,7 @@
             public DateTime TrainingDate { get; set; }
             public int TrainingDuration { get; set; }
             public int TrainingRoom { get; set; }
+            public int Price { get; set; }
             public TrainerInfoDTO Trainer { get; set; }
         }
             
