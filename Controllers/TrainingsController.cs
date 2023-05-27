@@ -32,7 +32,7 @@ namespace Gribanova_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Training.ToListAsync();
+            return await _context.Training.Include(t => t.Trainer).ToListAsync();
         }
 
         // GET: api/Trainings/5
@@ -44,8 +44,7 @@ namespace Gribanova_API.Controllers
           {
               return NotFound();
           }
-            var training = await _context.Training.FindAsync(id);
-
+            var training = await _context.Training.Include(t => t.Trainer).FirstOrDefaultAsync(t => t.TrainingId == id);
             if (training == null)
             {
                 return NotFound();
@@ -61,7 +60,7 @@ namespace Gribanova_API.Controllers
             {
                 return NotFound();
             }
-            var training = await _context.Training.Where(t => t.TrainingName.Contains(name)).ToListAsync();
+            var training = await _context.Training.Where(t => t.TrainingName.Contains(name)).Include(t => t.Trainer).ToListAsync();
            
 
             if (training == null)
@@ -103,7 +102,36 @@ namespace Gribanova_API.Controllers
 
             return training;
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TrainingInfoDTO>>> GetFreeTrainings()
+        {
+           
 
+            var training = await _context.Training
+                .Where(t => t.Price==0)
+                .Include(t => t.Trainer)
+                .Select(t => new TrainingInfoDTO
+                {
+                    TrainingName = t.TrainingName,
+                    TrainingDate = t.TrainingDate,
+                    TrainingDuration = t.TrainingDuration,
+                    TrainingRoom = t.TrainingRoom,
+                    Price=t.Price,
+                    Trainer = new TrainerInfoDTO
+                    {
+                        TrainerFirstName = t.Trainer.TrainerFirstName,
+                        TrainerLastName = t.Trainer.TrainerLastName
+                    }
+                })
+                .ToListAsync();
+
+            if (training == null)
+            {
+                return NotFound();
+            }
+
+            return training;
+        }
 
         // PUT: api/Trainings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
